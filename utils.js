@@ -1,3 +1,3 @@
-export function log(...args) {
+export function Log(...args) {
   console.log(...(['***********'].concat(args)));
 }

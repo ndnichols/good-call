@@ -13,50 +13,32 @@ import {
   View
 } from 'react-native';
 
+import FindYourReps from './components/FindYourReps'
+import SignIn from './components/SignIn'
+import {Styles} from './styles'
+import {Log} from './utils'
+
 export default class GoodCall extends Component {
   render() {
     return (
       <Navigator
-        initialRoute={{ title: 'Hello, world!' }}
-        renderScene={(route, navigator) =>
-          <View style={styles.container}>
-            <Text>{route.title}</Text>
-          </View>
+        initialRoute={{ key: 'signin' }}
+        renderScene={(route, navigator) => {
+          Log("Route is ", route);
+          if (route.key === 'signin') {
+            return <SignIn />
+          }
+          else {
+            <View style={Styles.container}>
+              <Text>{route.title}</Text>
+            </View>
+          }
+        }
       }/>
     );
-      // <View style={styles.container}>
-      //   <Text style={styles.welcome}>
-      //     Welcome to React Native!
-      //   </Text>
-      //   <Text style={styles.instructions}>
-      //     To get started, edit index.ios.js
-      //   </Text>
-      //   <Text style={styles.instructions}>
-      //     Press Cmd+R to reload,{'\n'}
-      //     Cmd+D or shake for dev menu
-      //   </Text>
-      // </View>
-    // );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+
 
 AppRegistry.registerComponent('GoodCall', () => GoodCall);
