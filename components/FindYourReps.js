@@ -8,7 +8,7 @@ function buildRepresentatives(json) {
   let houseIndex = json.offices.find(
     (office) => office.officialIndices.length === 1
   ).officialIndices[0];
-  let reps = [{
+  let replist = [{
     name: json.officials[senateIndices[0]].name,
     position: 'senator1',
     title: 'Senator'
@@ -20,7 +20,14 @@ function buildRepresentatives(json) {
     name: json.officials[houseIndex].name,
     position: 'representative',
     title: 'Representative'
-  }]
+  }];
+  let reps = {};
+  for (var rep of replist) {
+    reps[rep.position] = {
+      name: rep.name,
+      title: rep.title
+    }
+  }
   return reps;
 }
 

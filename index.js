@@ -7,10 +7,11 @@ import {
   View
 } from 'react-native';
 
-import FindYourReps from './components/FindYourReps'
-import SignIn from './components/SignIn'
-import {Styles} from './styles'
-import {Log} from './utils'
+import FindYourReps from './components/FindYourReps';
+import SignIn from './components/SignIn';
+import {Styles} from './styles';
+import {Log} from './utils';
+import * as persistence from './persistence';
 
 var times = 0;
 
@@ -33,8 +34,10 @@ export default class GoodCall extends Component {
           else if (route.key === 'findReps') {
             return <FindYourReps
               storeRepresentatives={(reps) => {
-                Log(reps)
-                navigator.push({key: 'ready'})
+                persistence.storeRepresentatives(reps).then(() => {
+                  Log("Ok stored representatives ok!");
+                  navigator.push({key: 'ready'});
+                });
               }}
             />
           }

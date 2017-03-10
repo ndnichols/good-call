@@ -7,9 +7,9 @@ import {
   View
 } from 'react-native';
 
-import {Styles} from '../styles'
-import FBApp from '../firebase'
-import {Log} from '../utils'
+import {Styles} from '../styles';
+import FBApp from '../firebase';
+import {Log} from '../utils';
 
 export default class SignIn extends Component {
   componentWillMount() {
@@ -21,9 +21,9 @@ export default class SignIn extends Component {
         var isAnonymous = user.isAnonymous;
         var uid = user.uid;
         Log("The user signed in anonymously as uid ", uid);
-        this.props.onSignedIn()
+        this.props.onSignedIn();
       } else {
-        Log("The user was not signed in!")
+        Log("The user was not signed in!");
         Log("Going to make a new user!");
         FBApp.auth().signInAnonymously().catch(function(error) {
           Log("There was an error signing in anonymously");
