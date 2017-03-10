@@ -31,15 +31,18 @@ export default class GoodCall extends Component {
             />);
           }
           else if (route.key === 'findReps') {
+            return <FindYourReps
+              storeRepresentatives={(reps) => {
+                Log(reps)
+                navigator.push({key: 'ready'})
+              }}
+            />
+          }
+          else if (route.key === 'ready') {
             return (<View style={Styles.container}>
-              <Text>Time to find your reps!</Text>
+              <Text>You are ready to go!</Text>
             </View>);
           }
-          // else {
-          //   return (<View style={Styles.container}>
-          //     <Text>{route.title}</Text>
-          //   </View>);
-          // }
         }
       }/>
     );
