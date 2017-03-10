@@ -28,7 +28,16 @@ export default class GoodCall extends Component {
           Log("renderScene Route is ", route);
           if (route.key === 'signin') {
             return (<SignIn
-              onSignedIn={() => navigator.push({key: 'findReps'})}
+              onSignedIn={() => {
+                persistence.getRepresentatives().then((snapshot) => {
+                  if (snapshot.val()) {
+                    navigator.push({key:'ready'});
+                  }
+                  else {
+                    navigator.push({key: 'findReps'})
+                  }
+                });
+              }}
             />);
           }
           else if (route.key === 'findReps') {
