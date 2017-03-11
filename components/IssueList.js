@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import {
+  Alert,
   AppRegistry,
   ListView,
   Navigator,
   StyleSheet,
   Text,
+  TouchableHighlight,
   View
 } from 'react-native';
 
@@ -16,11 +18,13 @@ import * as persistence from '../persistence';
 class IssueRow extends Component {
   render() {
     return (
-      <View style={{height: 200}}>
-        <Text>{this.props.title}</Text>
-        <Text>{this.props.text}</Text>
-        <Text>{this.props.ctaCount}</Text>
-      </View>
+      <TouchableHighlight onPress={() => Log("You touched ", this.props.issue)}>
+        <View style={{height: 200}}>
+          <Text>{this.props.issue.title}</Text>
+          <Text>{this.props.issue.text}</Text>
+          <Text>{this.props.issue.ctaCount}</Text>
+        </View>
+      </TouchableHighlight>
     );
   }
 }
@@ -47,13 +51,7 @@ export default class IssueList extends Component {
       <View style={{flex: 1, paddingTop: 22}}>
         <ListView
           dataSource={this.state.dataSource}
-          renderRow={(rowData) => {
-            return (<IssueRow
-              title={rowData.title}
-              text={rowData.text}
-              ctaCount={rowData.ctaCount}
-            />);
-          }}
+          renderRow={(rowData) => <IssueRow issue={rowData} />}
         />
       </View>
     );
