@@ -9,6 +9,7 @@ import {
 
 import FindYourReps from './components/FindYourReps';
 import SignIn from './components/SignIn';
+import IssueList from './components/IssueList';
 import {Styles} from './styles';
 import {Log} from './utils';
 import * as persistence from './persistence';
@@ -51,9 +52,7 @@ export default class GoodCall extends Component {
             />
           }
           else if (route.key === 'ready') {
-            return (<View style={Styles.container}>
-              <Text>You are ready to go!</Text>
-            </View>);
+            return <IssueList />
           }
         }
       }/>
