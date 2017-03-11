@@ -52,7 +52,14 @@ export default class GoodCall extends Component {
             />
           }
           else if (route.key === 'ready') {
-            return <IssueList />
+            return <IssueList
+              onSelection={(issue) => {
+                navigator.push({key: 'callToAction', issue:issue})
+              }}
+            />
+          }
+          else if (route.key === 'callToAction') {
+            return <Text>Call To action regarding {route.issue.title}</Text>
           }
         }
       }/>

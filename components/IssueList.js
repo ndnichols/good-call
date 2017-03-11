@@ -18,7 +18,7 @@ import * as persistence from '../persistence';
 class IssueRow extends Component {
   render() {
     return (
-      <TouchableHighlight onPress={() => Log("You touched ", this.props.issue)}>
+      <TouchableHighlight onPress={() => this.props.onPress(this.props.issue)}>
         <View style={{height: 200}}>
           <Text>{this.props.issue.title}</Text>
           <Text>{this.props.issue.text}</Text>
@@ -51,7 +51,7 @@ export default class IssueList extends Component {
       <View style={{flex: 1, paddingTop: 22}}>
         <ListView
           dataSource={this.state.dataSource}
-          renderRow={(rowData) => <IssueRow issue={rowData} />}
+          renderRow={(rowData) => <IssueRow issue={rowData} onPress={this.props.onSelection} />}
         />
       </View>
     );
