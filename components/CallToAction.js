@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AsyncStorage, View, Button, ListView, Text, Navigator, TouchableHighlight } from 'react-native';
+import { AsyncStorage, View, Button, Linking, ListView, Text, Navigator, TouchableHighlight } from 'react-native';
 import * as persistence from '../persistence';
 
 import _ from 'lodash';
@@ -14,10 +14,15 @@ class WaitingRow extends Component {
 
 class CallCallToAction extends Component {
   render() {
-    return (<View style={{height:200}}>
-      <Text>Call {this.props.target.name} at {this.props.target.phones[0]}:</Text>
-      <Text>{this.props.callToAction.script}</Text>
-    </View>)
+    const url = 'https://www.google.com/search?client=safari&rls=en&ie=UTF-8&oe=UTF-8&q=' + this.props.target.phones[0];
+    return (
+      <TouchableHighlight onPress={() => Linking.openURL(url)}>
+        <View style={{height:200}}>
+          <Text>Call {this.props.target.name}</Text>
+          <Text>{this.props.callToAction.script}</Text>
+        </View>
+      </TouchableHighlight>
+    )
   }
 }
 
