@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
+  AsyncStorage,
   Navigator,
   StyleSheet,
   Text,
@@ -28,7 +29,8 @@ export default class GoodCall extends Component {
             return (<SignIn
               onSignedIn={() => {
                 persistence.getRepresentatives().then((snapshot) => {
-                  if (snapshot.val()) {
+                  var reps = snapshot.val();
+                  if (reps) {
                     navigator.push({key:'ready'});
                   }
                   else {
@@ -43,6 +45,7 @@ export default class GoodCall extends Component {
               storeRepresentatives={(reps) => {
                 persistence.storeRepresentatives(reps).then(() => {
                   Log("Ok stored representatives ok!");
+                  AsyncStorage.setItem('representatives', JSON.stringify(reps));
                   navigator.push({key: 'ready'});
                 });
               }}

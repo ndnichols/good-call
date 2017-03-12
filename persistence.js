@@ -11,6 +11,11 @@ export function getRepresentatives() {
   return repRef.once('value');
 }
 
+export function getCTA(ctaKey) {
+  let ctaRef = FBApp.database().ref('callToAction/' + ctaKey);
+  return ctaRef.once('value');
+}
+
 export function watchIssueList(f) {
   let issueRef = FBApp.database().ref('issue/');
   issueRef.on('value', (snapshot) => {

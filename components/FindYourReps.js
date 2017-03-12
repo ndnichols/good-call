@@ -10,14 +10,17 @@ function buildRepresentatives(json) {
   ).officialIndices[0];
   let replist = [{
     name: json.officials[senateIndices[0]].name,
+    phones: json.officials[senateIndices[0]].phones,
     position: 'senator1',
     title: 'Senator'
   }, {
     name: json.officials[senateIndices[1]].name,
+    phones: json.officials[senateIndices[1]].phones,
     position: 'senator2',
     title: 'Senator'
   }, {
     name: json.officials[houseIndex].name,
+    phones: json.officials[houseIndex].phones,
     position: 'representative',
     title: 'Representative'
   }];
@@ -25,7 +28,8 @@ function buildRepresentatives(json) {
   for (var rep of replist) {
     reps[rep.position] = {
       name: rep.name,
-      title: rep.title
+      title: rep.title,
+      phones: rep.phones
     }
   }
   return reps;

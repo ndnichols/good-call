@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import { View, Button, ListView, Text, Navigator, TouchableHighlight } from 'react-native';
+import { AsyncStorage, View, Button, ListView, Text, Navigator, TouchableHighlight } from 'react-native';
+import * as persistence from '../persistence';
 
 import _ from 'lodash';
+import {Log} from '../utils';
+
 
 class WaitingRow extends Component {
   render() {
@@ -9,26 +12,77 @@ class WaitingRow extends Component {
   }
 }
 
+class CallCallToAction extends Component {
+  render() {
+    return (<View style={{height:200}}>
+      <Text>Call {this.props.target.name} at {this.props.target.phones[0]}:</Text>
+      <Text>{this.props.callToAction.script}</Text>
+    </View>)
+  }
+}
+
 export default class ActLinks extends Component {
   constructor(props) {
     super(props);
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this._data = _.fill(Array(this.props.issue.ctaCount), {type: 'waiting'});
+    const ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => {
+        // Log("Checking ", r1, "and", r2, ": ", r1 !== r2);
+        return r1 !== r2;
+      }
+    });
     this.state = {
-      dataSource: ds.cloneWithRows(_.fill(Array(this.props.issue.ctaCount), {type: 'waiting'}))
+      dataSource: ds.cloneWithRows(this._data),
+      representatives: {}
     };
+    this.ctaKeys = _.keys(this.props.issue.callToAction);
+  }
+
+  componentWillMount() {
+    // Need to load each CTA
+    AsyncStorage.getItem('representatives').then((reps) => {
+      reps = JSON.parse(reps);
+      Log("Loaded reps from local storage", reps);
+      this.setState({representatives: reps});
+    });
+    for (let ctaKey of this.ctaKeys) {
+      // Log("ctaKey is", ctaKey);
+      persistence.getCTA(ctaKey).then((snapshot) => {
+        Log("Loaded one CTA");
+        var dataIndex = this.ctaKeys.indexOf(ctaKey);
+        const cta = snapshot.val();
+        this._data = this._data.slice();
+        this._data[dataIndex] = {
+          type: 'cta',
+          callToAction: cta
+        }
+        this.setState({
+          dataSource: this.state.dataSource.cloneWithRows(this._data)
+        });
+      });
+    }
   }
 
   render() {
+    Log("Rendering the CTA screen");
     return (
       <View style={{flex: 1, paddingTop: 22}}>
         <ListView
           dataSource={this.state.dataSource}
           renderRow={(rowData) => {
+            Log("Rendering a row, its ", rowData);
             if (rowData.type === 'waiting') {
               return <WaitingRow />
             }
+            else if (rowData.type === 'cta' && rowData.callToAction.type === 'call') {
+              Log("Target is", rowData.callToAction.target);
+              Log("Reps are", this.state.representatives);
+              return <CallCallToAction
+                callToAction={rowData.callToAction}
+                target={this.state.representatives[rowData.callToAction.target]}/>
+            }
             else {
-              return <Text>Bad</Text>
+              return <Text>Weird!</Text>
             }
           }}
         />
