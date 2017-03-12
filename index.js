@@ -7,6 +7,7 @@ import {
   View
 } from 'react-native';
 
+import CallToAction from './components/CallToAction'
 import FindYourReps from './components/FindYourReps';
 import SignIn from './components/SignIn';
 import IssueList from './components/IssueList';
@@ -22,10 +23,6 @@ export default class GoodCall extends Component {
       <Navigator
         initialRoute={{ key: 'signin' }}
         renderScene={(route, navigator) => {
-          times++;
-          if (times > 5) {
-            throw Error("Too many times in render!");
-          }
           Log("renderScene Route is ", route);
           if (route.key === 'signin') {
             return (<SignIn
@@ -59,7 +56,10 @@ export default class GoodCall extends Component {
             />
           }
           else if (route.key === 'callToAction') {
-            return <Text>Call To action regarding {route.issue.title}</Text>
+            return <CallToAction
+              onBack={navigator.pop}
+              issue={route.issue}
+            />
           }
         }
       }/>

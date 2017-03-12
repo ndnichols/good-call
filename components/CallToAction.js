@@ -1,21 +1,37 @@
 import React, { Component } from 'react';
-import { View, Button, Text, Navigator, TouchableHighlight } from 'react-native';
-import RealmTasks from '../realm-tasks';
+import { View, Button, ListView, Text, Navigator, TouchableHighlight } from 'react-native';
+
+import _ from 'lodash';
+
+class WaitingRow extends Component {
+  render() {
+    return <View><Text>Wait...</Text></View>
+  }
+}
 
 export default class ActLinks extends Component {
-  static get defaultProps() {
-    return {
-      title: 'Links to Actions'
+  constructor(props) {
+    super(props);
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.state = {
+      dataSource: ds.cloneWithRows(_.fill(Array(this.props.issue.ctaCount), {type: 'waiting'}))
     };
   }
 
   render() {
     return (
-      <View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Button title="Back super hard" onPress={this.props.backToIssueList} />
-        </View>
-        <Button title={buttonTitle} onPress={() => fuckThatGuy(this.props.title)} />
+      <View style={{flex: 1, paddingTop: 22}}>
+        <ListView
+          dataSource={this.state.dataSource}
+          renderRow={(rowData) => {
+            if (rowData.type === 'waiting') {
+              return <WaitingRow />
+            }
+            else {
+              return <Text>Bad</Text>
+            }
+          }}
+        />
       </View>
     )
   }
