@@ -14,6 +14,7 @@ import {Styles} from '../styles';
 import FBApp from '../firebase';
 import {Log} from '../utils';
 import * as persistence from '../persistence';
+import * as storage from '../storage';
 
 class IssueRow extends Component {
   render() {
@@ -39,6 +40,12 @@ export default class IssueList extends Component {
   }
 
   componentDidMount() {
+    storage.getActiveAction().then((action) => {
+      if (!action) {
+        return;
+      }
+      this.props.onActiveAction(action);
+    });
     persistence.watchIssueList((issues) => {
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(issues)

@@ -14,14 +14,26 @@ class WaitingRow extends Component {
 }
 
 class CallCallToAction extends Component {
+  componentDidMount() {
+    storage.getActiveAction().then((action) => {
+      if (!action) {
+        return;
+      }
+      Log("CallToAction knows it should show a screen!");
+      this.props.onActiveAction(action);
+    });
+  }
+
   render() {
     const url = 'https://www.google.com/search?client=safari&rls=en&ie=UTF-8&oe=UTF-8&q=' + this.props.target.phones[0];
     return (
       <TouchableHighlight onPress={() => {
-        persistence.storeAction({
+        var action = {
           type: 'attempt',
           callToAction: this.props.callToAction
-        }).then(() => Log("Saved an action successfully"));
+        };
+        storage.setActiveAction(action);
+        persistence.storeAction(action);
         Linking.openURL(url)}}>
         <View style={{height:200}}>
           <Text>Call {this.props.target.name}</Text>
@@ -38,7 +50,6 @@ export default class ActLinks extends Component {
     this._data = _.fill(Array(this.props.issue.ctaCount), {type: 'waiting'});
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => {
-        // Log("Checking ", r1, "and", r2, ": ", r1 !== r2);
         return r1 !== r2;
       }
     });
@@ -52,12 +63,10 @@ export default class ActLinks extends Component {
   componentWillMount() {
     // Need to load each CTA
     storage.getRepresentatives().then((reps) => {
-      Log("Loaded reps from local storage", reps);
       this.setState({representatives: reps});
     });
     for (let ctaKey of this.ctaKeys) {
       persistence.getCTA(ctaKey).then((snapshot) => {
-        Log("Loaded one CTA");
         var dataIndex = this.ctaKeys.indexOf(ctaKey);
         const cta = snapshot.val();
         this._data = this._data.slice();
@@ -73,19 +82,15 @@ export default class ActLinks extends Component {
   }
 
   render() {
-    Log("Rendering the CTA screen");
     return (
       <View style={{flex: 1, paddingTop: 22}}>
         <ListView
           dataSource={this.state.dataSource}
           renderRow={(rowData) => {
-            Log("Rendering a row, its ", rowData);
             if (rowData.type === 'waiting') {
               return <WaitingRow />
             }
             else if (rowData.type === 'cta' && rowData.callToAction.type === 'call') {
-              Log("Target is", rowData.callToAction.target);
-              Log("Reps are", this.state.representatives);
               return <CallCallToAction
                 callToAction={rowData.callToAction}
                 target={this.state.representatives[rowData.callToAction.target]}/>
