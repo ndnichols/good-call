@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
-  AsyncStorage,
   Navigator,
   StyleSheet,
   Text,
@@ -15,8 +14,7 @@ import IssueList from './components/IssueList';
 import {Styles} from './styles';
 import {Log} from './utils';
 import * as persistence from './persistence';
-
-var times = 0;
+import * as storage from './storage';
 
 export default class GoodCall extends Component {
   render() {
@@ -45,7 +43,7 @@ export default class GoodCall extends Component {
               storeRepresentatives={(reps) => {
                 persistence.storeRepresentatives(reps).then(() => {
                   Log("Ok stored representatives ok!");
-                  AsyncStorage.setItem('representatives', JSON.stringify(reps));
+                  storage.setRepresentatives(reps);
                   navigator.push({key: 'ready'});
                 });
               }}

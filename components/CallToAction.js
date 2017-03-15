@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { AsyncStorage, View, Button, Linking, ListView, Text, Navigator, TouchableHighlight } from 'react-native';
+import { View, Button, Linking, ListView, Text, Navigator, TouchableHighlight } from 'react-native';
 import * as persistence from '../persistence';
+import * as storage from '../storage';
 
 import _ from 'lodash';
 import {Log} from '../utils';
@@ -50,13 +51,11 @@ export default class ActLinks extends Component {
 
   componentWillMount() {
     // Need to load each CTA
-    AsyncStorage.getItem('representatives').then((reps) => {
-      reps = JSON.parse(reps);
+    storage.getRepresentatives().then((reps) => {
       Log("Loaded reps from local storage", reps);
       this.setState({representatives: reps});
     });
     for (let ctaKey of this.ctaKeys) {
-      // Log("ctaKey is", ctaKey);
       persistence.getCTA(ctaKey).then((snapshot) => {
         Log("Loaded one CTA");
         var dataIndex = this.ctaKeys.indexOf(ctaKey);
