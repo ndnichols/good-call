@@ -16,7 +16,12 @@ class CallCallToAction extends Component {
   render() {
     const url = 'https://www.google.com/search?client=safari&rls=en&ie=UTF-8&oe=UTF-8&q=' + this.props.target.phones[0];
     return (
-      <TouchableHighlight onPress={() => Linking.openURL(url)}>
+      <TouchableHighlight onPress={() => {
+        persistence.storeAction({
+          type: 'attempt',
+          callToAction: this.props.callToAction
+        }).then(() => Log("Saved an action successfully"));
+        Linking.openURL(url)}}>
         <View style={{height:200}}>
           <Text>Call {this.props.target.name}</Text>
           <Text>{this.props.callToAction.script}</Text>

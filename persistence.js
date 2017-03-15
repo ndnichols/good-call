@@ -16,6 +16,18 @@ export function getCTA(ctaKey) {
   return ctaRef.once('value');
 }
 
+export function storeAction(action) {
+  let actionRef = FBApp.database().ref('user/' + FBApp.auth().currentUser.uid + '/actions');
+  var newActionRef = actionRef.push();
+  return newActionRef.set(action);
+}
+
+// updates['/issue/' + newIssueRef.key] = issueData;
+// callToActionData.map(function(ctaData) {
+//   var newCTARef = ctaRef.push();
+//   issueData.callToAction[newCTARef.key] = true;
+
+
 export function watchIssueList(f) {
   let issueRef = FBApp.database().ref('issue/');
   issueRef.on('value', (snapshot) => {
