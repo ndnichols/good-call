@@ -59,6 +59,7 @@ export default class IssueList extends Component {
         <ListView
           dataSource={this.state.dataSource}
           renderRow={(rowData) => <IssueRow issue={rowData} onPress={this.props.onSelection} />}
+          enableEmptySections={true}
         />
       </View>
     );
