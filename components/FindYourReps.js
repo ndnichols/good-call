@@ -37,26 +37,40 @@ function buildRepresentatives(json) {
 
 export default class FindYourReps extends Component {
   render() {
-    return <View flex={1}>
-      <Text flex={1}>Enter your address below</Text>
-      <TextInput flex={1}
-        placeholder="123 Maple St."
-        returnKeyType="search"
-        onSubmitEditing={(event) => {
-          let address = event.nativeEvent.text;
-          let url = "https://www.googleapis.com/civicinfo/v2/representatives?levels=country&roles=legislatorLowerBody&roles=legislatorUpperBody&key=AIzaSyAIEAW7KLRqgKYeJTprDLlW8QqJA8-6ctE&address=" + encodeURI(address);
-          fetch(url).then((res) => {
-            if (res.ok) {
-              res.json().then((json) => {
-                let reps = buildRepresentatives(json);
-                this.props.storeRepresentatives(reps);
-              });
-            }
-            else {
-              console.log("Error hitting Google Civic API");
-            }
-          });
-        }}/>
-    </View>
+    return (
+      <View style={{height: 400}}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{height: 150, width:300}}>
+            <Text>
+              Please enter your name and home address below. This information is NOT stored anywhere besides on your phone.
+            </Text>
+          </View>
+          <View style={{height: 100, width: 300, borderRadius: 4, borderWidth: 0.5, borderColor: '#d6d7da'}}>
+            <TextInput
+              style={{flex: 1}}
+              placeholder="Your name"
+            />
+            <TextInput
+              style={{flex: 1}}
+              placeholder="Your address"
+              onSubmitEditing={(event) => {
+                let address = event.nativeEvent.text;
+                let url = "https://www.googleapis.com/civicinfo/v2/representatives?levels=country&roles=legislatorLowerBody&roles=legislatorUpperBody&key=AIzaSyAIEAW7KLRqgKYeJTprDLlW8QqJA8-6ctE&address=" + encodeURI(address);
+                fetch(url).then((res) => {
+                  if (res.ok) {
+                    res.json().then((json) => {
+                      let reps = buildRepresentatives(json);
+                      this.props.storeRepresentatives(reps);
+                    });
+                  }
+                  else {
+                    console.log("Error hitting Google Civic API");
+                  }
+                });
+            }}/>
+          </View>
+        </View>
+      </View>
+    );
   }
 }
