@@ -8,6 +8,9 @@ import {
   View
 } from 'react-native';
 
+import { Container, Content, Form, Item, Input, Label } from 'native-base';
+import { Drawer, Header, Title, Footer, FooterTab, Button, Left, Segment, Right, Body, Icon } from 'native-base';
+
 import ActiveAction from './components/ActiveAction'
 import CallToAction from './components/CallToAction'
 import FindYourReps from './components/FindYourReps';
@@ -44,11 +47,6 @@ export default class GoodCall extends Component {
         initialRoute={{ key: 'signin' }}
         renderScene={(route, navigator) => {
           Log("renderScene Route is ", route);
-          storage.getActiveAction().then((action) => {
-            if (action) {
-              Log("There was an active action at the top of renderScene!");
-            }
-          })
           if (route.key === 'signin') {
             return (<SignIn
               onSignedIn={() => {
@@ -75,23 +73,57 @@ export default class GoodCall extends Component {
             />
           }
           else if (route.key === 'ready') {
-            return <IssueList
-              onSelection={(issue) => {
-                navigator.push({key: 'callToAction', issue:issue})
-              }}
-              onActiveAction={(action) => {
-                navigator.push({key: 'activeAction', action:action})
-              }}
-            />
+            return (
+              <Container>
+                <Header>
+                  <Left>
+                    <Button transparent>
+                      <Icon name='menu' />
+                    </Button>
+                  </Left>
+                  <Body>
+                    <Title style={{width:200}}>Good Call — 13 actions</Title>
+                  </Body>
+                  <Right />
+                </Header>
+                <Content>
+                  <IssueList
+                    onSelection={(issue) => {
+                      navigator.push({key: 'callToAction', issue:issue})
+                    }}
+                    onActiveAction={(action) => {
+                      navigator.push({key: 'activeAction', action:action})
+                    }}
+                  />
+                </Content>
+              </Container>
+            )
           }
           else if (route.key === 'callToAction') {
-            return <CallToAction
-              onBack={navigator.pop}
-              issue={route.issue}
-              onActiveAction={(action) => {
-                navigator.push({key: 'activeAction', action:action})
-              }}
-            />
+            return (
+              <Container>
+                <Header>
+                  <Left>
+                    <Button transparent>
+                      <Icon name='menu' />
+                    </Button>
+                  </Left>
+                  <Body>
+                    <Title style={{width:200}}>Good Call — 13 actions</Title>
+                  </Body>
+                  <Right />
+                </Header>
+                <Content>
+                  <CallToAction
+                    onBack={navigator.pop}
+                    issue={route.issue}
+                    onActiveAction={(action) => {
+                      navigator.push({key: 'activeAction', action:action})
+                    }}
+                  />
+              </Content>
+            </Container>
+          )
           }
           else if (route.key === 'activeAction') {
             return <ActiveAction
